@@ -1,7 +1,9 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { GraphQLScalarType } from 'graphql';
 import { ItemType } from './item.dto';
 import { Item } from './item.interface';
 import { ItemInput } from './item.type';
+import { LockType } from './lock.type';
 import { ItemsService } from './items.service';
 
 @Resolver()
@@ -31,6 +33,11 @@ export class ItemsResolver {
     @Mutation(returns => ItemType)
     async deleteItem(@Args('id') id: string) {
         return this.itemsService.delete(id);
+    }
+
+    @Query(returns => [LockType])
+    async testGraphQl() {
+        return this.itemsService.testTheGraph();
     }
 
     @Query(returns => String)

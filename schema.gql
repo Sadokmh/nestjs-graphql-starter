@@ -9,8 +9,14 @@ type ItemType {
   description: String!
 }
 
+type LockType {
+  address: String!
+  name: String!
+}
+
 type Query {
   items: [ItemType!]!
+  testGraphQl: [LockType!]!
   hello: String!
 }
 
