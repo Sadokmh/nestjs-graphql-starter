@@ -2,32 +2,69 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type ItemType {
-  id: ID!
-  title: String!
-  price: Int!
-  description: String!
-}
-
 type LockType {
   address: String!
   name: String!
 }
 
+type TokenType {
+  id: String
+  symbol: String
+  name: String
+  decimals: Float
+  totalSupply: Float
+  volume: Float
+  volumeUSD: Float
+  untrackedVolumeUSD: Float
+  feesUSD: Float
+  txCount: Float
+  poolCount: Float
+  totalValueLocked: Float
+  totalValueLockedUSD: Float
+}
+
+type PoolType {
+  id: String
+  createdAtTimestamp: String
+  createdAtBlockNumber: String
+  token0: TokenType
+  token1: TokenType
+  feeTier: String
+  liquidity: String
+  sqrtPrice: String
+  feeGrowthGlobal0X128: String
+  feeGrowthGlobal1X128: String
+  token0Price: Float
+  token1Price: Float
+  tick: String
+}
+
+type TransactionType {
+  id: String
+  blockNumber: Float
+  timestamp: Float
+  gasUsed: Float
+  gasPrice: Float
+}
+
+type SwapType {
+  id: String
+  transaction: TransactionType
+  timestamp: Float
+  pool: PoolType
+  token0: TokenType
+  token1: TokenType
+  sender: String
+  recipient: String
+  origin: String
+  amount0: Float
+  amount1: Float
+  amountUSD: Float
+  sqrtPriceX96: Float
+}
+
 type Query {
-  items: [ItemType!]!
   testGraphQl: [LockType!]!
   hello: String!
-}
-
-type Mutation {
-  createItem(input: ItemInput!): ItemType!
-  updateItem(input: ItemInput!, id: String!): ItemType!
-  deleteItem(id: String!): ItemType!
-}
-
-input ItemInput {
-  title: String!
-  price: Int!
-  description: String!
+  swaps: [SwapType!]
 }

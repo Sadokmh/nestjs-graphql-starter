@@ -11,8 +11,7 @@ import { MongooseModule } from '@nestjs/mongoose';
     ItemsModule, 
     GraphQLModule.forRoot({
     autoSchemaFile: 'schema.gql',
-    }),
-    MongooseModule.forRoot('mongodb://localhost/nestgraphql')
+    })
 ],
   controllers: [AppController],
   providers: [AppService],

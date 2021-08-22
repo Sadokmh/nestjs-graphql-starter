@@ -1,43 +1,69 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { ItemType } from './item.dto';
-import { Item } from './item.interface';
-import { ItemInput } from './item.type';
-import { Observable } from 'rxjs';
-
 @Injectable()
 export class ItemsService {
+
+  UNISWAP_SUBGRAPH_URL = 'https://gateway.thegraph.com/api/b5af9f38028b5a0ea2347d6d461cb94f/subgraphs/id/0x9bde7bf4d5b13ef94373ced7c8ee0be59735a298-2';
+
   constructor(
-    @InjectModel('Item') private itemModel: Model<Item>,
     private http: HttpService,
   ) {}
 
-  async create(createItemDto: ItemInput): Promise<ItemType> {
-    const createdItem = new this.itemModel(createItemDto);
-    return await createdItem.save();
+  
+
+
+  async getSwaps() {
+    return new Promise((resolve, reject) => {
+      this.http.post(
+        this.UNISWAP_SUBGRAPH_URL,
+        {
+          query: `
+            query {
+              swaps {
+                id 
+                transaction {
+                  id 
+                  gasPrice
+                  blockNumber
+                }
+                token0 {
+                  id
+                  symbol
+                  name
+                  volume
+                  volumeUSD
+                  feesUSD
+                  totalSupply
+                }
+                token1 {
+                  id
+                  symbol
+                  name
+                  volume
+                  volumeUSD
+                  feesUSD
+                  totalSupply
+                }
+                sender
+              }
+            }
+          `
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      ).subscribe((resp: any) => {
+        resolve(resp?.data?.data?.swaps)
+      }) 
+    })
   }
 
-  async findAll(): Promise<ItemType[]> {
-    return await this.itemModel.find().exec();
-  }
-
-  async findOne(id: string): Promise<ItemType> {
-    return await this.itemModel.findOne({ _id: id });
-  }
-
-  async delete(id: string): Promise<ItemType> {
-    return await this.itemModel.findByIdAndRemove(id);
-  }
-
-  async update(id: string, item: Item): Promise<ItemType> {
-    return await this.itemModel.findByIdAndUpdate(id, item, { new: true });
-  }
   async testTheGraph(): Promise<any> {
     return new Promise((resolve,reject) => {
       this.http.post(
-        'https://api.thegraph.com/subgraphs/name/unlock-protocol/unlock',
+        this.UNISWAP_SUBGRAPH_URL,
         {
           query: 
             `query {
